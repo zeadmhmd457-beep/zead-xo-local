@@ -1,4 +1,914 @@
-from pathlib import Path
-html = r'''
-ZEAD XO :root{ --bg:#080b18;--panel:#11182b;--panel2:#151f38; --cyan:#35e7ff;--purple:#a855f7;--pink:#ff4fd8; --text:#f4f7ff;--muted:#9aa8c7;--line:rgba(111,143,255,.2); } *{box-sizing:border-box} body{ margin:0;min-height:100vh;padding:26px 16px 34px; color:var(--text);font-family:Arial,Tahoma,sans-serif;text-align:center; background: radial-gradient(ellipse at 15% 10%,rgba(71,52,180,.24),transparent 38%), radial-gradient(ellipse at 85% 35%,rgba(0,195,255,.15),transparent 35%), var(--bg); overflow-x:hidden; } body:before{ content:"";position:fixed;inset:0;pointer-events:none;opacity:.16; background-image:linear-gradient(rgba(90,130,255,.12) 1px,transparent 1px), linear-gradient(90deg,rgba(90,130,255,.12) 1px,transparent 1px); background-size:34px 34px;mask-image:linear-gradient(to bottom,black,transparent 85%); } .app{position:relative;width:min(100%,470px);margin:auto} .topline{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px} .brand-tag{font-size:11px;letter-spacing:3px;color:var(--muted);border:1px solid var(--line);padding:8px 12px;border-radius:30px;background:#10172a} .sound-btn{ border:1px solid var(--line);background:#11182b;color:var(--text); width:40px;height:40px;border-radius:13px;font-size:18px;cursor:pointer } h1{ margin:5px 0 7px;font-size:clamp(35px,10vw,49px);font-weight:900; letter-spacing:2px;color:#fff;text-shadow:0 0 12px rgba(53,231,255,.6),0 0 28px rgba(168,85,247,.5) } h1 span{color:var(--cyan)} .subtitle{margin:0;color:var(--muted);font-size:14px} .scoreboard{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:27px 0 20px} .score{ padding:13px 7px;border:1px solid var(--line);border-radius:17px; background:linear-gradient(145deg,rgba(21,31,56,.95),rgba(12,17,34,.95)); box-shadow:0 8px 25px rgba(0,0,0,.18) } .score .label{font-size:12px;color:var(--muted);margin-bottom:7px} .score .number{font-size:25px;font-weight:800} .score.x .number{color:var(--cyan);text-shadow:0 0 12px rgba(53,231,255,.5)} .score.o .number{color:var(--pink);text-shadow:0 0 12px rgba(255,79,216,.5)} .status-box{ display:flex;justify-content:center;align-items:center;gap:9px; min-height:54px;padding:12px;border:1px solid var(--line);border-radius:15px; background:rgba(17,24,43,.8);color:#eaf2ff;font-size:16px;margin-bottom:17px } .status-dot{width:9px;height:9px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px var(--cyan)} .status-box.turn-o .status-dot{background:var(--pink);box-shadow:0 0 12px var(--pink)} .board{ display:grid;grid-template-columns:repeat(3,1fr);gap:11px; width:min(100%,390px);margin:0 auto 22px } .cell{ aspect-ratio:1/1;min-width:0;border:1px solid rgba(116,144,255,.22); border-radius:19px;background:linear-gradient(145deg,#17233e,#10172b); color:white;font-size:clamp(48px,14vw,68px);font-weight:900;cursor:pointer; box-shadow:inset 0 0 18px rgba(64,100,190,.08),0 8px 20px rgba(0,0,0,.2); transition:transform .16s ease,border-color .16s ease,background .16s ease,box-shadow .16s ease; -webkit-tap-highlight-color:transparent } .cell:active{transform:scale(.94)} .cell:disabled{cursor:default} .cell.x{color:var(--cyan);text-shadow:0 0 13px rgba(53,231,255,.85),0 0 30px rgba(53,231,255,.35);animation:pop .22s ease} .cell.o{color:var(--pink);text-shadow:0 0 13px rgba(255,79,216,.85),0 0 30px rgba(255,79,216,.35);animation:pop .22s ease} .cell.win{ border-color:var(--cyan);background:linear-gradient(145deg,rgba(24,75,94,.8),rgba(30,35,78,.95)); box-shadow:0 0 18px rgba(53,231,255,.28),inset 0 0 20px rgba(53,231,255,.12) } .controls{display:flex;gap:10px;justify-content:center;flex-wrap:wrap} .action{ border:0;border-radius:13px;padding:14px 20px;font-size:15px;font-weight:700; cursor:pointer;transition:transform .15s ease,filter .15s ease } .action:active{transform:scale(.96)} .primary{color:#06101d;background:linear-gradient(100deg,var(--cyan),#7c9dff);box-shadow:0 0 20px rgba(53,231,255,.2)} .secondary{color:#e9eaff;background:#18223b;border:1px solid var(--line)} .hint{margin:22px 0 0;color:#71809f;font-size:12px;line-height:1.7} .footer{margin-top:24px;font-size:11px;color:#566482;letter-spacing:2px} @keyframes pop{0%{transform:scale(.65);opacity:.4}100%{transform:scale(1);opacity:1}} @media(max-width:360px){body{padding:18px 12px}.board{gap:8px}.cell{border-radius:15px}.score{padding:11px 4px}} @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}} 
-THE CLASSIC BATTLE
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080b18">
+<title>ZEAD XO | السناني</title>
+
+<style>
+:root {
+  --bg:#080b18;
+  --cyan:#35e7ff;
+  --pink:#ff4fd8;
+  --text:#f4f7ff;
+  --muted:#9aa8c7;
+  --line:rgba(111,143,255,.2);
+}
+* { box-sizing:border-box; }
+
+body {
+  margin:0;
+  min-height:100vh;
+  padding:26px 16px 34px;
+  color:var(--text);
+  font-family:Arial,Tahoma,sans-serif;
+  text-align:center;
+  background:
+    radial-gradient(ellipse at 15% 10%,rgba(71,52,180,.24),transparent 38%),
+    radial-gradient(ellipse at 85% 35%,rgba(0,195,255,.15),transparent 35%),
+    var(--bg);
+}
+
+body:before {
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.16;
+  background-image:
+    linear-gradient(rgba(90,130,255,.12) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(90,130,255,.12) 1px,transparent 1px);
+  background-size:34px 34px;
+}
+
+.app {
+  position:relative;
+  width:min(100%,470px);
+  margin:auto;
+}
+
+.topline {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:22px;
+}
+
+.brand-tag {
+  font-size:11px;
+  letter-spacing:3px;
+  color:var(--muted);
+  border:1px solid var(--line);
+  padding:8px 12px;
+  border-radius:30px;
+  background:#10172a;
+}
+
+h1 {
+  margin:5px 0 7px;
+  font-size:clamp(35px,10vw,49px);
+  font-weight:900;
+  letter-spacing:2px;
+  color:#fff;
+  text-shadow:0 0 12px rgba(53,231,255,.6),
+              0 0 28px rgba(168,85,247,.5);
+}
+
+h1 span { color:var(--cyan); }
+
+.family {
+  display:inline-block;
+  margin:7px 0;
+  padding:7px 22px;
+  border:1px solid var(--pink);
+  border-radius:30px;
+  color:#f3caff;
+  font-size:19px;
+  letter-spacing:3px;
+  text-shadow:0 0 12px var(--pink);
+  box-shadow:0 0 15px rgba(255,79,216,.2);
+}
+
+.subtitle {
+  margin:8px 0;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.scoreboard {
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:10px;
+  margin:27px 0 20px;
+}
+
+.score {
+  padding:13px 7px;
+  border:1px solid var(--line);
+  border-radius:17px;
+  background:linear-gradient(145deg,rgba(21,31,56,.95),rgba(12,17,34,.95));
+}
+
+.score .label {
+  font-size:12px;
+  color:var(--muted);
+  margin-bottom:7px;
+}
+
+.score .number {
+  font-size:25px;
+  font-weight:800;
+}
+
+.score.x .number {
+  color:var(--cyan);
+  text-shadow:0 0 12px rgba(53,231,255,.5);
+}
+
+.score.o .number {
+  color:var(--pink);
+  text-shadow:0 0 12px rgba(255,79,216,.5);
+}
+
+.status-box {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:9px;
+  min-height:54px;
+  padding:12px;
+  border:1px solid var(--line);
+  border-radius:15px;
+  background:rgba(17,24,43,.8);
+  color:#eaf2ff;
+  font-size:16px;
+  margin-bottom:17px;
+}
+
+.status-dot {
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background:var(--cyan);
+  box-shadow:0 0 12px var(--cyan);
+}
+
+.status-box.turn-o .status-dot {
+  background:var(--pink);
+  box-shadow:0 0 12px var(--pink);
+}
+
+.board {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:11px;
+  width:min(100%,390px);
+  margin:0 auto 22px;
+}
+
+.cell {
+  aspect-ratio:1/1;
+  min-width:0;
+  border:1px solid rgba(116,144,255,.22);
+  border-radius:19px;
+  background:linear-gradient(145deg,#17233e,#10172b);
+  color:white;
+  font-size:clamp(48px,14vw,68px);
+  font-weight:900;
+  cursor:pointer;
+  box-shadow:inset 0 0 18px rgba(64,100,190,.08),
+             0 8px 20px rgba(0,0,0,.2);
+  transition:transform .16s ease,
+             border-color .16s ease,
+             background .16s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+
+.cell:active { transform:scale(.94); }
+.cell:disabled { cursor:default; }
+
+.cell.x {
+  color:var(--cyan);
+  text-shadow:0 0 13px rgba(53,231,255,.85),
+              0 0 30px rgba(53,231,255,.35);
+  animation:pop .22s ease;
+}
+
+.cell.o {
+  color:var(--pink);
+  text-shadow:0 0 13px rgba(255,79,216,.85),
+              0 0 30px rgba(255,79,216,.35);
+  animation:pop .22s ease;
+}
+
+.cell.win {
+  border-color:var(--cyan);
+  background:linear-gradient(145deg,rgba(24,75,94,.8),rgba(30,35,78,.95));
+  box-shadow:0 0 18px rgba(53,231,255,.28),
+             inset 0 0 20px rgba(53,231,255,.12);
+}
+
+.controls {
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+
+.action {
+  border:0;
+  border-radius:13px;
+  padding:14px 20px;
+  font-size:15px;
+  font-weight:700;
+  cursor:pointer;
+  transition:transform .15s ease;
+}
+
+.action:active { transform:scale(.96); }
+
+.primary {
+  color:#06101d;
+  background:linear-gradient(100deg,var(--cyan),#7c9dff);
+  box-shadow:0 0 20px rgba(53,231,255,.2);
+}
+
+.secondary {
+  color:#e9eaff;
+  background:#18223b;
+  border:1px solid var(--line);
+}
+
+.hint {
+  margin:22px 0 0;
+  color:#71809f;
+  font-size:12px;
+  line-height:1.7;
+}
+
+.footer {
+  margin-top:24px;
+  font-size:11px;
+  color:#566482;
+  letter-spacing:2px;
+}
+
+@keyframes pop {
+  0% { transform:scale(.65); opacity:.4; }
+  100% { transform:scale(1); opacity:1; }
+}
+
+@media(max-width:360px) {
+  body { padding:18px 12px; }
+  .board { gap:8px; }
+  .cell { border-radius:15px; }
+  .score { padding:11px 4px; }
+}
+
+@media(prefers-reduced-motion:reduce) {
+  *,*:before,*:after {
+    animation:none!important;
+    transition:none!important;
+  }
+}
+</style>
+</head>
+
+<body>
+<main class="app">
+
+  <div class="topline">
+    <div class="brand-tag">THE CLASSIC BATTLE</div>
+    <div>⚡</div>
+  </div>
+
+  <h1>ZEAD <span>XO</span></h1>
+  <div class="family">السناني</div>
+  <p class="subtitle">لعبة التحدي بين الأصدقاء ❌⭕</p>
+
+  <section class="scoreboard">
+    <div class="score x">
+      <div class="label">اللاعب X</div>
+      <div class="number" id="scoreX">0</div>
+    </div>
+
+    <div class="score">
+      <div class="label">تعادل</div>
+      <div class="number" id="scoreDraw">0</div>
+    </div>
+
+    <div class="score o">
+      <div class="label">اللاعب O</div>
+      <div class="number" id="scoreO">0</div>
+    </div>
+  </section>
+
+  <div class="status-box" id="statusBox">
+    <span class="status-dot"></span>
+    <span id="status">دور اللاعب X</span>
+  </div>
+
+  <section class="board" id="board"></section>
+
+  <div class="controls">
+    <button class="action primary" onclick="resetGame()">
+      ↻ لعبة جديدة
+    </button>
+
+    <button class="action secondary" onclick="resetAll()">
+      مسح النتائج
+    </button>
+  </div>
+
+  <p class="hint">
+    اختار مربع واضغط عليه عشان تلعب<br>
+    اللعب بين لاعبين على نفس الجهاز حالياً
+  </p>
+
+  <div class="footer">ZEAD XO • AL-SINANY</div>
+
+</main>
+
+<script>
+let cells = Array(9).fill("");
+let player = "X";
+let finished = false;
+
+let scores = {
+  X: 0,
+  O: 0,
+  draw: 0
+};
+
+const board = document.getElementById("board");
+const statusText = document.getElementById("status");
+const statusBox = document.getElementById("statusBox");
+
+const wins = [
+  [0,1,2],
+  [3,4,5],
+  [6,7,8],
+  [0,3,6],
+  [1,4,7],
+  [2,5,8],
+  [0,4,8],
+  [2,4,6]
+];
+
+function draw() {
+  board.innerHTML = "";
+
+  cells.forEach((value, index) => {
+    const button = document.createElement("button");
+
+    button.className = "cell";
+    if (value) {
+      button.classList.add(value.toLowerCase());
+    }
+
+    button.textContent = value;
+    button.disabled = Boolean(value) || finished;
+
+    button.onclick = () => play(index);
+
+    board.appendChild(button);
+  });
+}
+
+function updateScores() {
+  document.getElementById("scoreX").textContent = scores.X;
+  document.getElementById("scoreO").textContent = scores.O;
+  document.getElementById("scoreDraw").textContent = scores.draw;
+}
+
+function play(index) {
+  if (cells[index] || finished) return;
+
+  cells[index] = player;
+
+  const winningLine = wins.find(line =>
+    line.every(i => cells[i] === player)
+  );
+
+  if (winningLine) {
+    finished = true;
+    scores[player]++;
+
+    statusText.textContent = "🏆 اللاعب " + player + " فاز!";
+
+    draw();
+
+    winningLine.forEach(i => {
+      board.children[i].classList.add("win");
+    });
+
+    updateScores();
+    return;
+  }
+
+  if (cells.every(Boolean)) {
+    finished = true;
+    scores.draw++;
+
+    statusText.textContent = "🤝 تعادل!";
+
+    draw();
+    updateScores();
+    return;
+  }
+
+  player = player === "X" ? "O" : "X";
+
+  statusText.textContent = "دور اللاعب " + player;
+
+  statusBox.classList.toggle("turn-o", player === "O");
+
+  draw();
+}
+
+function resetGame() {
+  cells = Array(9).fill("");
+  player = "X";
+  finished = false;
+
+  statusText.textContent = "دور اللاعب X";
+  statusBox.classList.remove("turn-o");
+
+  draw();
+}
+
+function resetAll() {
+  scores = {
+    X: 0,
+    O: 0,
+    draw: 0
+  };
+
+  updateScores();
+  resetGame();
+}
+
+draw();
+updateScores();
+</script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080b18">
+<title>ZEAD XO | السناني</title>
+
+<style>
+:root {
+  --bg:#080b18;
+  --cyan:#35e7ff;
+  --pink:#ff4fd8;
+  --text:#f4f7ff;
+  --muted:#9aa8c7;
+  --line:rgba(111,143,255,.2);
+}
+* { box-sizing:border-box; }
+
+body {
+  margin:0;
+  min-height:100vh;
+  padding:26px 16px 34px;
+  color:var(--text);
+  font-family:Arial,Tahoma,sans-serif;
+  text-align:center;
+  background:
+    radial-gradient(ellipse at 15% 10%,rgba(71,52,180,.24),transparent 38%),
+    radial-gradient(ellipse at 85% 35%,rgba(0,195,255,.15),transparent 35%),
+    var(--bg);
+}
+
+body:before {
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.16;
+  background-image:
+    linear-gradient(rgba(90,130,255,.12) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(90,130,255,.12) 1px,transparent 1px);
+  background-size:34px 34px;
+}
+
+.app {
+  position:relative;
+  width:min(100%,470px);
+  margin:auto;
+}
+
+.topline {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:22px;
+}
+
+.brand-tag {
+  font-size:11px;
+  letter-spacing:3px;
+  color:var(--muted);
+  border:1px solid var(--line);
+  padding:8px 12px;
+  border-radius:30px;
+  background:#10172a;
+}
+
+h1 {
+  margin:5px 0 7px;
+  font-size:clamp(35px,10vw,49px);
+  font-weight:900;
+  letter-spacing:2px;
+  color:#fff;
+  text-shadow:0 0 12px rgba(53,231,255,.6),
+              0 0 28px rgba(168,85,247,.5);
+}
+
+h1 span { color:var(--cyan); }
+
+.family {
+  display:inline-block;
+  margin:7px 0;
+  padding:7px 22px;
+  border:1px solid var(--pink);
+  border-radius:30px;
+  color:#f3caff;
+  font-size:19px;
+  letter-spacing:3px;
+  text-shadow:0 0 12px var(--pink);
+  box-shadow:0 0 15px rgba(255,79,216,.2);
+}
+
+.subtitle {
+  margin:8px 0;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.scoreboard {
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:10px;
+  margin:27px 0 20px;
+}
+
+.score {
+  padding:13px 7px;
+  border:1px solid var(--line);
+  border-radius:17px;
+  background:linear-gradient(145deg,rgba(21,31,56,.95),rgba(12,17,34,.95));
+}
+
+.score .label {
+  font-size:12px;
+  color:var(--muted);
+  margin-bottom:7px;
+}
+
+.score .number {
+  font-size:25px;
+  font-weight:800;
+}
+
+.score.x .number {
+  color:var(--cyan);
+  text-shadow:0 0 12px rgba(53,231,255,.5);
+}
+
+.score.o .number {
+  color:var(--pink);
+  text-shadow:0 0 12px rgba(255,79,216,.5);
+}
+
+.status-box {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:9px;
+  min-height:54px;
+  padding:12px;
+  border:1px solid var(--line);
+  border-radius:15px;
+  background:rgba(17,24,43,.8);
+  color:#eaf2ff;
+  font-size:16px;
+  margin-bottom:17px;
+}
+
+.status-dot {
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background:var(--cyan);
+  box-shadow:0 0 12px var(--cyan);
+}
+
+.status-box.turn-o .status-dot {
+  background:var(--pink);
+  box-shadow:0 0 12px var(--pink);
+}
+
+.board {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:11px;
+  width:min(100%,390px);
+  margin:0 auto 22px;
+}
+
+.cell {
+  aspect-ratio:1/1;
+  min-width:0;
+  border:1px solid rgba(116,144,255,.22);
+  border-radius:19px;
+  background:linear-gradient(145deg,#17233e,#10172b);
+  color:white;
+  font-size:clamp(48px,14vw,68px);
+  font-weight:900;
+  cursor:pointer;
+  box-shadow:inset 0 0 18px rgba(64,100,190,.08),
+             0 8px 20px rgba(0,0,0,.2);
+  transition:transform .16s ease,
+             border-color .16s ease,
+             background .16s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+
+.cell:active { transform:scale(.94); }
+.cell:disabled { cursor:default; }
+
+.cell.x {
+  color:var(--cyan);
+  text-shadow:0 0 13px rgba(53,231,255,.85),
+              0 0 30px rgba(53,231,255,.35);
+  animation:pop .22s ease;
+}
+
+.cell.o {
+  color:var(--pink);
+  text-shadow:0 0 13px rgba(255,79,216,.85),
+              0 0 30px rgba(255,79,216,.35);
+  animation:pop .22s ease;
+}
+
+.cell.win {
+  border-color:var(--cyan);
+  background:linear-gradient(145deg,rgba(24,75,94,.8),rgba(30,35,78,.95));
+  box-shadow:0 0 18px rgba(53,231,255,.28),
+             inset 0 0 20px rgba(53,231,255,.12);
+}
+
+.controls {
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+
+.action {
+  border:0;
+  border-radius:13px;
+  padding:14px 20px;
+  font-size:15px;
+  font-weight:700;
+  cursor:pointer;
+  transition:transform .15s ease;
+}
+
+.action:active { transform:scale(.96); }
+
+.primary {
+  color:#06101d;
+  background:linear-gradient(100deg,var(--cyan),#7c9dff);
+  box-shadow:0 0 20px rgba(53,231,255,.2);
+}
+
+.secondary {
+  color:#e9eaff;
+  background:#18223b;
+  border:1px solid var(--line);
+}
+
+.hint {
+  margin:22px 0 0;
+  color:#71809f;
+  font-size:12px;
+  line-height:1.7;
+}
+
+.footer {
+  margin-top:24px;
+  font-size:11px;
+  color:#566482;
+  letter-spacing:2px;
+}
+
+@keyframes pop {
+  0% { transform:scale(.65); opacity:.4; }
+  100% { transform:scale(1); opacity:1; }
+}
+
+@media(max-width:360px) {
+  body { padding:18px 12px; }
+  .board { gap:8px; }
+  .cell { border-radius:15px; }
+  .score { padding:11px 4px; }
+}
+
+@media(prefers-reduced-motion:reduce) {
+  *,*:before,*:after {
+    animation:none!important;
+    transition:none!important;
+  }
+}
+</style>
+</head>
+
+<body>
+<main class="app">
+
+  <div class="topline">
+    <div class="brand-tag">THE CLASSIC BATTLE</div>
+    <div>⚡</div>
+  </div>
+
+  <h1>ZEAD <span>XO</span></h1>
+  <div class="family">السناني</div>
+  <p class="subtitle">لعبة التحدي بين الأصدقاء ❌⭕</p>
+
+  <section class="scoreboard">
+    <div class="score x">
+      <div class="label">اللاعب X</div>
+      <div class="number" id="scoreX">0</div>
+    </div>
+
+    <div class="score">
+      <div class="label">تعادل</div>
+      <div class="number" id="scoreDraw">0</div>
+    </div>
+
+    <div class="score o">
+      <div class="label">اللاعب O</div>
+      <div class="number" id="scoreO">0</div>
+    </div>
+  </section>
+
+  <div class="status-box" id="statusBox">
+    <span class="status-dot"></span>
+    <span id="status">دور اللاعب X</span>
+  </div>
+
+  <section class="board" id="board"></section>
+
+  <div class="controls">
+    <button class="action primary" onclick="resetGame()">
+      ↻ لعبة جديدة
+    </button>
+
+    <button class="action secondary" onclick="resetAll()">
+      مسح النتائج
+    </button>
+  </div>
+
+  <p class="hint">
+    اختار مربع واضغط عليه عشان تلعب<br>
+    اللعب بين لاعبين على نفس الجهاز حالياً
+  </p>
+
+  <div class="footer">ZEAD XO • AL-SINANY</div>
+
+</main>
+
+<script>
+let cells = Array(9).fill("");
+let player = "X";
+let finished = false;
+
+let scores = {
+  X: 0,
+  O: 0,
+  draw: 0
+};
+
+const board = document.getElementById("board");
+const statusText = document.getElementById("status");
+const statusBox = document.getElementById("statusBox");
+
+const wins = [
+  [0,1,2],
+  [3,4,5],
+  [6,7,8],
+  [0,3,6],
+  [1,4,7],
+  [2,5,8],
+  [0,4,8],
+  [2,4,6]
+];
+
+function draw() {
+  board.innerHTML = "";
+
+  cells.forEach((value, index) => {
+    const button = document.createElement("button");
+
+    button.className = "cell";
+    if (value) {
+      button.classList.add(value.toLowerCase());
+    }
+
+    button.textContent = value;
+    button.disabled = Boolean(value) || finished;
+
+    button.onclick = () => play(index);
+
+    board.appendChild(button);
+  });
+}
+
+function updateScores() {
+  document.getElementById("scoreX").textContent = scores.X;
+  document.getElementById("scoreO").textContent = scores.O;
+  document.getElementById("scoreDraw").textContent = scores.draw;
+}
+
+function play(index) {
+  if (cells[index] || finished) return;
+
+  cells[index] = player;
+
+  const winningLine = wins.find(line =>
+    line.every(i => cells[i] === player)
+  );
+
+  if (winningLine) {
+    finished = true;
+    scores[player]++;
+
+    statusText.textContent = "🏆 اللاعب " + player + " فاز!";
+
+    draw();
+
+    winningLine.forEach(i => {
+      board.children[i].classList.add("win");
+    });
+
+    updateScores();
+    return;
+  }
+
+  if (cells.every(Boolean)) {
+    finished = true;
+    scores.draw++;
+
+    statusText.textContent = "🤝 تعادل!";
+
+    draw();
+    updateScores();
+    return;
+  }
+
+  player = player === "X" ? "O" : "X";
+
+  statusText.textContent = "دور اللاعب " + player;
+
+  statusBox.classList.toggle("turn-o", player === "O");
+
+  draw();
+}
+
+function resetGame() {
+  cells = Array(9).fill("");
+  player = "X";
+  finished = false;
+
+  statusText.textContent = "دور اللاعب X";
+  statusBox.classList.remove("turn-o");
+
+  draw();
+}
+
+function resetAll() {
+  scores = {
+    X: 0,
+    O: 0,
+    draw: 0
+  };
+
+  updateScores();
+  resetGame();
+}
+
+draw();
+updateScores();
+</script>
+
+</body>
+</html>
